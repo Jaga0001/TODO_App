@@ -18,8 +18,15 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.blue.shade100,
       appBar: AppBar(
-        title: Text('TODO'),
+        backgroundColor: Colors.blue.shade600,
+        title: Center(
+          child: Text(
+            'TO DO',
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.w600),
+          ),
+        ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
@@ -46,7 +53,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                 final todo = todos[index];
                 return Slidable(
                   key: ValueKey(todo.id),
-                  endActionPane: ActionPane(motion: ScrollMotion(), children: [
+                  endActionPane: ActionPane(motion: StretchMotion(), children: [
                     SlidableAction(
                       onPressed: (context) {
                         deleteTodo(todo.id);
@@ -56,7 +63,9 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                       label: 'Delete',
                     ),
                     SlidableAction(
-                      onPressed: (context) {},
+                      onPressed: (context) {
+                        _showUpdateDialog(context, todo.id);
+                      },
                       backgroundColor: Colors.white,
                       icon: Icons.update,
                       label: 'Update',
@@ -65,15 +74,16 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                   child: Padding(
                     padding: const EdgeInsets.all(15.0),
                     child: Container(
+                      padding: EdgeInsets.all(12),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
-                          color: Colors.yellow.shade300),
+                          color: Colors.blue.shade300),
                       child: ListTile(
                         title: Text(
                           todo.title,
                           style: TextStyle(color: Colors.black),
                         ),
-                        trailing: Checkbox(
+                        leading: Checkbox(
                           value: todo.isDone,
                           onChanged: (bool? value) {
                             setState(() {
@@ -132,7 +142,7 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
         });
   }
 
-  Future _showUpdateDialog(context) {
+  Future _showUpdateDialog(context, id) {
     return showDialog(
         context: context,
         builder: (context) {
@@ -151,7 +161,16 @@ class _ToDoListScreenState extends State<ToDoListScreen> {
                     _updateController.clear();
                     Navigator.pop(context);
                   },
-                  child: Text('Cancel'))
+                  child: Text('Cancel')),
+              TextButton(
+                  onPressed: () {
+                    if (_updateController.text.isNotEmpty) {
+                      updateNameTodo(_updateController.text, id);
+                      _updateController.clear();
+                      Navigator.pop(context);
+                    }
+                  },
+                  child: Text('Update')),
             ],
           );
         });

@@ -39,9 +39,9 @@ Future<void> deleteTodo(String id) async {
   }
 }
 
-Future<void> updateNameTodo(String name, Todo todo) async {
+Future<void> updateNameTodo(String name, id) async {
   try {
-    await _firestore.collection('todos').doc(todo.id).update({'title': name});
+    await _firestore.collection('todos').doc(id).update({'title': name});
   } catch (e) {
     print(e.toString());
   }
